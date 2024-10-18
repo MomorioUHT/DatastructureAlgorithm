@@ -46,10 +46,10 @@ Node* createNode(int key, Node* parent) {
 //====================================================
 
 //====================================================
-//Tree Traversals
+//Normal Tree Traversals
 
 void preOrderTraversal(Node* node) {
-    printf("%d", node->key);
+    printf("%d ", node->key);
     Node* child = node->leftChild;
     while (child) {
         preOrderTraversal(child);
@@ -58,8 +58,50 @@ void preOrderTraversal(Node* node) {
 }
 
 void postOrderTraversal(Node* node) {
-    
+    Node* child = node->leftChild;
+    while (child) {
+        postOrderTraversal(child);
+        child = child->rightSibling;
+    }
+    printf("%d ", node->key);
 }
+//====================================================
+
+//====================================================
+//Etc
+
+Node* getParent(Node* node) {
+    return node->parent;
+}
+
+Node* getChild(Node* node, int k) {
+    Node* curr = node->leftChild;
+    for (int i = 0; i < k; i++) {
+        curr = curr->rightSibling;
+    }
+    return curr;
+}   
+
+int isRoot(Node* node) {
+    return node->parent == NULL;
+}
+
+int isExternal(Node* node) {
+    return node->leftChild == NULL;
+}
+
+int depth(Node* node) {
+    int depth = 0;
+    while (node->parent != NULL) {
+        node = node->parent;
+        depth++;
+    }
+    return depth;
+}
+
+
+
+//====================================================
 
 int main() {
     Node* node1 = createRoot(1);
@@ -74,4 +116,12 @@ int main() {
     Node* node10 = createNode(10, node3);
     Node* node11 = createNode(11, node3);
     Node* node12 = createNode(12, node11);
+
+    printf("Preorder Traversal from Root\n");
+    preOrderTraversal(node1);
+
+    printf("\n");
+
+    printf("Postorder Traversal from Root\n");
+    postOrderTraversal(node1);
 }
