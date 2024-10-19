@@ -156,6 +156,34 @@ Node* maximum(Node* node) {
     return node;
 }
 
+Node* treeInsert(int key, Node* root) {
+    Node* new_node = createNode(key);
+    Node* trail = NULL;
+    Node* iterator = root;
+
+    while (iterator != NULL) {
+        trail = iterator;
+        if (new_node->key > iterator->key) {
+            iterator = iterator->right;
+        } else {
+            iterator = iterator->left;
+        }
+    }
+
+    new_node->parent = trail;
+
+    if (trail != NULL) {
+        if (new_node->key > trail->key) {
+            trail->right = new_node;
+        } else {
+            trail->left = new_node;
+        }
+    }
+
+    return new_node;
+}
+
+
 //=======================================================
 //Finding Successor & Predecessor
 
