@@ -183,10 +183,50 @@ Node* treeInsert(int key, Node* root) {
     return new_node;
 }
 
+Node* transplant(Node* u, Node* v) {
+    Node* p = u->parent;
+    if (p != NULL) {
+        if (p->left == u) {
+            p->left = v;
+        } else {
+            p->right = v;
+        }
+    }
+
+    if (v != NULL) {
+        v->parent = p;
+    }
+}
+
+Node* treeDelete(Node* del) {
+    if (del->left == NULL) {
+        transplant(del, del->right);
+    }
+    if (del->right == NULL) {
+        transplant(del, del->left);
+    }
+
+    if (del->left != NULL && del->right != NULL) {
+        Node* y = minimum(del->right); //y->left is always null
+
+        //case 3.2
+        if (y->parent != del) {
+            transplant(y, y->right);
+            y->right = del->right;
+            y->right->parent = y;
+        }
+        //case 3.1
+        transplant(del, y);
+        y->left = del->left;
+        y->left->parent = y;
+    }
+}
+
 
 //=======================================================
 //Finding Successor & Predecessor
 
+//Successor -> smallest node with value more than z
 Node* successor(Node* node) {
     if (node->right != NULL) return minimum(node->right);
 
@@ -199,6 +239,7 @@ Node* successor(Node* node) {
     return ancestor;
 }
 
+//Predecessor -> largest node with value less than z
 Node* predecessor(Node* node) {
     if (node->left != NULL) return maximum(node->left);
 
