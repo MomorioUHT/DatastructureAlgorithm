@@ -53,8 +53,45 @@ void bubbleSort(int* Arr, int n) {
     }
 }
 
+//Heap Sort
+int left(int i) {
+    return (2 * i) + 1;
+}
+
+int right(int i) {
+    return (2 * i) + 2;
+}
+
+void maxHeapify(int* A, int i, int n) {
+    int l = left(i);
+    int r = right(i);
+    int swap_pos = i;
+
+    if (l < n && A[l] > A[i]) {  
+        swap_pos = l;
+    }
+    if (r < n && A[r] > A[swap_pos]) {  
+        swap_pos = r;
+    }
+
+    if (swap_pos != i) {
+        swap(A, i, swap_pos);
+        maxHeapify(A, swap_pos, n);
+    }
+}
+
+void buildMaxHeap(int* A, int n) {
+    for (int i = (n / 2) - 1; i >= 0; i--) {
+        maxHeapify(A, i, n);
+    }
+}
+
 void heapSort(int* A, int n) {
-    
+    buildMaxHeap(A, n);
+    for (int i = n - 1; i > 0; i--) { 
+        swap(A, 0, i);
+        maxHeapify(A, 0, i);
+    }
 }
 
 int main() {
@@ -93,4 +130,11 @@ int main() {
 
     int q = 10;
     int D[] = {8, 1, 5, 9, 2, 4, 7, 10, 3, 6}; 
+
+    heapSort(A, n);
+    for (int i = 0; i < n; ++i) {
+        printf("%d ", A[i]);
+    }
+
+    printf("\n");
 }
