@@ -10,19 +10,19 @@ typedef struct node {
 } Node;
 
 int max(int a, int b) {
-    return (a > b)? a : b;
+    return (a > b) ? a : b;
 }
 
 int height(Node* node) {
-    if (node == NULL) return -1;
+    if (node == NULL) return -1; // Return -1 for NULL nodes
 
     return node->height;
 }
 
 int getBalance(Node* node) {
-    if (node == NULL) return -1;
+    if (node == NULL) return 0; // Return 0 for NULL nodes
 
-    return (node->left->height - node->right->height);
+    return (height(node->left) - height(node->right));
 }
 
 Node* createNode(int x) {
@@ -37,13 +37,16 @@ Node* createNode(int x) {
 
 Node* leftRotate(Node* x) {
     Node* y = x->right;
+    if (y == NULL) return x; // Prevent dereferencing NULL
     Node* b = y->left;
 
     y->left = x;
     x->parent = y;
 
     x->right = b;
-    b->parent = x;
+    if (b != NULL) {
+        b->parent = x; // Check for NULL before accessing parent
+    }
 
     x->height = 1 + max(height(x->left), height(x->right));
     y->height = 1 + max(height(y->left), height(y->right));
@@ -53,61 +56,88 @@ Node* leftRotate(Node* x) {
 
 Node* rightRotate(Node* x) {
     Node* y = x->left;
+    if (y == NULL) return x; // Prevent dereferencing NULL
     Node* b = y->right;
 
     y->right = x;
     x->parent = y;
 
     x->left = b;
-    b->parent = x;
+    if (b != NULL) {
+        b->parent = x; // Check for NULL before accessing parent
+    }
 
     x->height = 1 + max(height(x->left), height(x->right));
-    y->height = 1 + max(height(y->left), height(y->right));   
+    y->height = 1 + max(height(y->left), height(y->right));
 
     return y;
 }
 
-Node* insert(Node* node, int key) {
-    if (node == NULL) {
+Node* insert(Node* root, int key) {
+    if (root == NULL) {
         return createNode(key);
     }
 
-    if (key < node->key) {
-        node->left = insert(node->left, key);
-        node->left->parent = node;
-    } else if (key > node->key) {
-        node->right = insert(node->right, key);
-        node->right->parent = node;
+    if (key < root->key) {
+        root->left = insert(root->left, key);
+        root->left->parent = root;
+    } else if (key > root->key) {
+        root->right = insert(root->right, key);
+        root->right->parent = root;
     } else {
-        return node;
+        return root;
     }
 
-    node->height = 1 + max(height(node->left), height(node->right));
+    root->height = 1 + max(height(root->left), height(root->right));
 
-    //Check the balance
-    int balance = getBalance(node);
+    // Check the balance
+    int balance = getBalance(root);
 
-    
-    if (balance > 1 && key < node->left->key) { // Left left case
-        return rightRotate(node);
+    if (balance > 1 && key < root->left->key) { // Left left case
+        return rightRotate(root);
     }
-    if (balance < -1 && key > node->right->key) { // Right right case
-        return leftRotate(node);
+    if (balance < -1 && key > root->right->key) { // Right right case
+        return leftRotate(root);
     }
-    if (balance > 1 && key > node->left->key) { // Left right case
-        node->left = leftRotate(node->left); 
-        return rightRotate(node);
+    if (balance > 1 && key > root->left->key) { // Left right case
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
     }
-    if (balance < -1 && key < node->right->key) { // Right left case
-        node->right = rightRotate(node->right); 
-        return leftRotate(node);
+    if (balance < -1 && key < root->right->key) { // Right left case
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
     }
 
-    return node;
-
+    return root;
 }
 
+void preOrder(Node* node) {
+    if (node == NULL) return;
+
+    printf("%d ", node->key);
+    preOrder(node->left);
+    preOrder(node->right);
+}
 
 int main() {
+    Node* root = NULL;
+
+    root = insert(root, 10);
+    root = insert(root, 20);
+    root = insert(root, 30);
+    root = insert(root, 40);
+    root = insert(root, 50);
+    root = insert(root, 25);
+
+    /* The constructed AVL Tree would be
+                30
+               /  \
+             20   40
+            /  \     \
+           10  25    50
+    */
+
+    printf("Preorder traversal : \n");
+    preOrder(root);
     return 0;
 }
