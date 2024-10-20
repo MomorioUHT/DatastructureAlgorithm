@@ -21,6 +21,54 @@ void printGraph(vector<int>* adjList, int v) {
     cout << endl;
 }
 
+void removeEdge(vector<int>* adjList, int u, int v) {
+    for (int i = 0; i < adjList[u].size(); i++) {
+        if (adjList[u][i] == v) {
+            adjList[u].erase(adjList[u].begin() + i);
+            return;
+        }
+    }
+}
+
+void addVertex(int &n, int u) {
+    n = u + 1;
+}
+
+void removeVertex(vector<int>* adjList, int &n, int u) {
+    if (u < n-1) return -1;
+
+    for (int i = 0; i < n; i++) {
+        removeEdge(adjList, i, u);
+    }
+
+    adjList[u].clear();
+    n--;
+}
+
+bool isAdjacent(vector<int>* adjList, int u, int v) {
+    for (int i = 0; i < adjList[u].size(); i++) {
+        if (adjList[u][i] == v) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int inDegree(vector<int>* adjList, int n, int u) {
+    int deg = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; i < adjList[i].size(); j++) {
+            if (adjList[i][j] == u) {
+                deg++;
+            }
+        }
+    }
+    return deg;
+}
+
+int outDegree(vector<int>* adjList, int u) {
+    return adjList[u].size();
+}
 int main() {
     int n = 5;
     vector<int>* adjList = createGraph(n);
