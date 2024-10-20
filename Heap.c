@@ -25,7 +25,7 @@ void maxHeapify(int* A, int i, int n) {
     int r = right(i);
     int swap_pos = i;
 
-    if (l < n && A[l] > A[i]) {  
+    if (l < n && A[l] > A[swap_pos]) {  
         swap_pos = l;
     }
     if (r < n && A[r] > A[swap_pos]) {  
