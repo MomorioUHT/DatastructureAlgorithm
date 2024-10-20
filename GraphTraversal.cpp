@@ -18,7 +18,7 @@ void bfs(vector<vector<int>>& adj, int start) {
     while (!queue.empty()) {
         u = queue.front(); 
         queue.pop();
-        cout << u << endl;
+        cout << u << " ";
 
         for (int x : adj[u]) {
             if (!visited[x]) {
@@ -33,7 +33,7 @@ void bfs(vector<vector<int>>& adj, int start) {
 // DFS in undirected graph
 void dfsVisit(vector<vector<int>>& adj, vector<bool>& visited, int curr) {
     visited[curr] = true;
-    cout << curr << endl;
+    cout << curr << " ";
 
     for (int x: adj[curr]) {
         if (!visited[x]) {
@@ -67,6 +67,8 @@ int main()
 
     cout << "BFS starting from 0 : \n";
     bfs(adj, 0);
+
+    cout << endl;
 
     cout << "DFS starting from 0 : \n";
     dfs(adj, 0);    
